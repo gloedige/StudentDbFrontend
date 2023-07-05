@@ -1,6 +1,6 @@
 package de.iav.studentdbfrontend.dto;
 
-public record NewStudentDto(
+public record StudentWithoutMatriculationNumber(
         String firstName,
         String lastName,
         String email,

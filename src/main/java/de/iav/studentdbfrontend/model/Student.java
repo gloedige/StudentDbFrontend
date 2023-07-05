@@ -1,4 +1,4 @@
-package de.iav.httpclient.model;
+package de.iav.studentdbfrontend.model;
 
 public record Student(
         String matriculationNumber,
