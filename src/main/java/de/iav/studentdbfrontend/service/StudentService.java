@@ -16,6 +16,7 @@ public class StudentService {
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
+    private final String STUDENT_BASE_URL = "http://localhost:8080/api/students";
     private List<Student> students;
 
 
@@ -27,7 +28,7 @@ public class StudentService {
     public Student getStudentByMatriculationNumber(String matriculationNumber){
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("http://localhost:8080/api/students/" + matriculationNumber))
+                .uri(URI.create(STUDENT_BASE_URL + "/" + matriculationNumber))
                 .build();
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
@@ -46,7 +47,7 @@ public class StudentService {
         try {
             String requestBody = objectMapper.writeValueAsString(student);
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/students"))
+                    .uri(URI.create(STUDENT_BASE_URL))
                     .header("Content-Type", "application/json")
                     .header("Accept", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -55,24 +56,17 @@ public class StudentService {
 
             return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)
-                    .thenApply(this::mapToAddStudent)
+                    .thenApply(this::mapToStudent)
                     .join();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
-        }
-    }
-    private Student mapToAddStudent(String json) {
-        try{
-            return objectMapper.readValue(json, Student.class);
-        }catch (JsonProcessingException e){
-            throw new RuntimeException("Failed to open Student!", e);
         }
     }
 
     public List<Student> getAllStudents(){
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("http://localhost:8080/api/students"))
+                .uri(URI.create(STUDENT_BASE_URL))
                 .build();
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
