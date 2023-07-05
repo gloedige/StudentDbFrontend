@@ -55,13 +55,13 @@ public class StudentService {
 
             return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)
-                    .thenApply(this::mapToStudentAddStudent)
+                    .thenApply(this::mapToAddStudent)
                     .join();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
-    private Student mapToStudentAddStudent(String json) {
+    private Student mapToAddStudent(String json) {
         try{
             return objectMapper.readValue(json, Student.class);
         }catch (JsonProcessingException e){
